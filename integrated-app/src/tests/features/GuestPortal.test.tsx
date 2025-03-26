@@ -4,107 +4,72 @@ import { BrowserRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '../../i18n';
 import GuestPortal from '../../components/guest-area/GuestPortal';
-import GuestInvitation from '../../components/guest-area/GuestInvitation';
-import GuestRSVP from '../../components/guest-area/GuestRSVP';
 
-// Mock für Supabase Client
+// Mock Supabase
 jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn(() => ({
+    auth: {
+      signIn: jest.fn().mockResolvedValue({
+        data: { user: { id: 'test-guest-id' } },
+        error: null
+      }),
+      signOut: jest.fn().mockResolvedValue({
+        error: null
+      })
+    },
     from: jest.fn(() => ({
       select: jest.fn(() => ({
         eq: jest.fn(() => ({
-          single: jest.fn(() => ({
-            data: { 
-              id: 1, 
-              name: 'Max Mustermann', 
-              email: 'max@example.com', 
-              status: 'pending', 
-              access_code: 'ABC123',
-              dietary_restrictions: '',
-              plus_one: false
+          single: jest.fn().mockResolvedValue({
+            data: {
+              id: 'test-invitation-id',
+              wedding_id: 'test-wedding-id',
+              guest_name: 'Test Guest',
+              rsvp_status: 'pending'
             },
-            error: null,
-          })),
-        })),
+            error: null
+          })
+        }))
       })),
-      update: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          select: jest.fn(() => ({
-            single: jest.fn(() => ({
-              data: { 
-                id: 1, 
-                name: 'Max Mustermann', 
-                email: 'max@example.com', 
-                status: 'confirmed', 
-                access_code: 'ABC123',
-                dietary_restrictions: 'vegetarian',
-                plus_one: true
-              },
-              error: null,
-            })),
-          })),
-        })),
-      })),
-    }),
+      update: jest.fn().mockResolvedValue({
+        data: { id: 'test-invitation-id' },
+        error: null
+      })
+    })),
     storage: {
       from: jest.fn(() => ({
         getPublicUrl: jest.fn(() => ({
-          data: { publicUrl: 'https://example.com/invitation.jpg' },
-        })),
-      })),
-    },
-  })),
+          data: { publicUrl: 'https://example.com/image.jpg' }
+        }))
+      }))
+    }
+  }))
 }));
 
-describe('Guest Portal Tests', () => {
-  // GuestPortal Tests
-  describe('GuestPortal Component', () => {
-    test('renders access code form', () => {
-      render(
-        <BrowserRouter>
-          <I18nextProvider i18n={i18n}>
-            <GuestPortal />
-          </I18nextProvider>
-        </BrowserRouter>
-      );
-      
-      expect(screen.getByText(/Zugangscode/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /Zugang/i })).toBeInTheDocument();
-    });
+describe('GuestPortal Component', () => {
+  beforeEach(() => {
+    render(
+      <BrowserRouter>
+        <I18nextProvider i18n={i18n}>
+          <GuestPortal />
+        </I18nextProvider>
+      </BrowserRouter>
+    );
   });
-  
-  // GuestInvitation Tests
-  describe('GuestInvitation Component', () => {
-    test('renders invitation details', async () => {
-      render(
-        <BrowserRouter>
-          <I18nextProvider i18n={i18n}>
-            <GuestInvitation guestId="1" accessCode="ABC123" />
-          </I18nextProvider>
-        </BrowserRouter>
-      );
-      
-      await waitFor(() => {
-        expect(screen.getByText(/Max Mustermann/i)).toBeInTheDocument();
-      });
-    });
+
+  test('renders guest portal title', () => {
+    expect(screen.getByText(/wedding invitation/i)).toBeInTheDocument();
   });
-  
-  // GuestRSVP Tests
-  describe('GuestRSVP Component', () => {
-    test('renders RSVP form', async () => {
-      render(
-        <BrowserRouter>
-          <I18nextProvider i18n={i18n}>
-            <GuestRSVP guestId="1" accessCode="ABC123" />
-          </I18nextProvider>
-        </BrowserRouter>
-      );
-      
-      await waitFor(() => {
-        expect(screen.getByText(/RSVP/i)).toBeInTheDocument();
-        expect(screen.getByText(/Teilnahme/i)).toBeInTheDocument();
-      });
+
+  test('allows guest to submit RSVP', async () => {
+    const accessCodeInput = screen.getByLabelText(/access code/i);
+    fireEvent.change(accessCodeInput, { target: { value: 'ABC123' } });
+    
+    const submitButton = screen.getByRole('button', { name: /submit/i });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/welcome/i)).toBeInTheDocument();
     });
   });
 });
