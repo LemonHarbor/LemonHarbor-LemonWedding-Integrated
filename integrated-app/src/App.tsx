@@ -11,7 +11,7 @@ import GuestManagement from './components/dashboard/GuestManagement';
 import TablePlanner from './components/dashboard/TablePlanner';
 import BudgetTracker from './components/dashboard/BudgetTracker';
 import TaskBoard from './components/dashboard/TaskBoard';
-import SecuritySettings from './components/dashboard/SecuritySettings';
+import { SecuritySettings } from './components/dashboard/SecuritySettings';
 
 // Auth Components
 import LoginForm from './components/auth/LoginForm';
@@ -23,7 +23,7 @@ import GuestInvitation from './components/guest-area/GuestInvitation';
 import GuestRSVP from './components/guest-area/GuestRSVP';
 
 // Public Pages
-import login from './pages/login';
+import LoginPage from './pages/login';
 
 // Admin Dashboard
 import AdminDashboard from './pages/AdminDashboard';
@@ -64,7 +64,7 @@ function App() {
           <Router>
             <Routes>
               {/* Public Routes */}
-              <Route path="/" element={<login />} />
+              <Route path="/" element={<LoginPage />} />
               
               {/* Auth Routes */}
               <Route path="/login" element={<LoginForm />} />
