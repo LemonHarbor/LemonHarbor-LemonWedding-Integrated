@@ -14,10 +14,8 @@ import TaskBoard from './components/dashboard/TaskBoard';
 import SecuritySettings from './components/dashboard/SecuritySettings';
 
 // Auth Components
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
-import ForgotPassword from './components/auth/ForgotPassword';
-import ResetPassword from './components/auth/ResetPassword';
+import LoginForm from './components/auth/LoginForm';
+import SignUpForm from './components/auth/SignUpForm';
 
 // Guest Portal Components
 import GuestPortal from './components/guest-area/GuestPortal';
@@ -25,10 +23,7 @@ import GuestInvitation from './components/guest-area/GuestInvitation';
 import GuestRSVP from './components/guest-area/GuestRSVP';
 
 // Public Pages
-import LandingPage from './pages/LandingPage';
-import FeatureDemo from './pages/FeatureDemo';
-import Pricing from './pages/Pricing';
-import Contact from './pages/Contact';
+import login from './pages/login';
 
 // Admin Dashboard
 import AdminDashboard from './pages/AdminDashboard';
@@ -69,16 +64,11 @@ function App() {
           <Router>
             <Routes>
               {/* Public Routes */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/demo" element={<FeatureDemo />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/contact" element={<Contact />} />
+              <Route path="/" element={<login />} />
               
               {/* Auth Routes */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/register" element={<SignUpForm />} />
               
               {/* Guest Portal Routes */}
               <Route path="/guest/:accessCode" element={<GuestPortal />} />
