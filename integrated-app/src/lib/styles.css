@@ -1,0 +1,95 @@
+/* Global CSS Variables for Theme Customization */
+:root {
+  --primary-color: #e11d48; /* rose-600 */
+  --secondary-color: #3b82f6; /* blue-500 */
+  --accent-color: #10b981; /* emerald-500 */
+  --font-family: "Inter", sans-serif;
+  --border-radius: 0.5rem;
+}
+
+/* Apply theme variables to components */
+.btn-primary,
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.btn-secondary,
+.bg-secondary {
+  background-color: var(--secondary-color);
+}
+
+.btn-accent,
+.bg-accent {
+  background-color: var(--accent-color);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
+}
+
+.text-accent {
+  color: var(--accent-color);
+}
+
+.border-primary {
+  border-color: var(--primary-color);
+}
+
+.border-secondary {
+  border-color: var(--secondary-color);
+}
+
+.border-accent {
+  border-color: var(--accent-color);
+}
+
+/* Apply font family */
+body {
+  font-family: var(--font-family);
+}
+
+/* Apply border radius */
+.rounded-custom {
+  border-radius: var(--border-radius);
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  --bg-color: #1f2937;
+  --text-color: #f3f4f6;
+  --card-bg: #374151;
+  --border-color: #4b5563;
+
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body.dark-mode .card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+/* High contrast mode */
+body.high-contrast {
+  --contrast-ratio: 1.5;
+
+  --primary-color: #d70000;
+  --secondary-color: #0047ab;
+  --accent-color: #008000;
+  --text-color: #000000;
+  --bg-color: #ffffff;
+
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Reduce motion for accessibility */
+body.reduce-motion * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}

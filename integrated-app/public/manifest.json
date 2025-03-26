@@ -1,0 +1,52 @@
+{
+  "name": "LemonWedding",
+  "short_name": "LemonWedding",
+  "description": "Hochzeitsplanungs-App",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Zum Dashboard",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icons/dashboard.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Gäste",
+      "short_name": "Gäste",
+      "description": "Gästemanagement",
+      "url": "/guests",
+      "icons": [{ "src": "/icons/guests.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Tischplan",
+      "short_name": "Tischplan",
+      "description": "Tischplanung",
+      "url": "/tables",
+      "icons": [{ "src": "/icons/tables.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
