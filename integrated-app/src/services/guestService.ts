@@ -1,5 +1,6 @@
-import { supabase, guestsQuery } from "@/lib/supabase";
-import { RealtimeGuest } from "@/lib/realtime";
+import { supabase } from "@/lib/supabase";
+import { guestsApi } from "@/lib/api";
+import type { Guest } from "@/lib/api";
 
 export interface GuestFormData {
   firstName: string;
@@ -10,28 +11,27 @@ export interface GuestFormData {
   category: string;
   dietaryRestrictions?: string;
   plusOne: boolean;
-  rsvpStatus: string;
+  plusOneName?: string;
+  rsvpStatus: "confirmed" | "declined" | "pending";
+  rsvpDeadline?: Date;
+  rsvpResponseDate?: Date;
   notes?: string;
 }
 
 // Create a new guest
 export async function createGuest(guestData: GuestFormData) {
   try {
-    const { firstName, lastName, ...rest } = guestData;
-
-    const { data, error } = await guestsQuery.create({
-      name: `${firstName} ${lastName}`.trim(),
-      email: rest.email,
-      phone: rest.phone || null,
-      category: rest.category,
-      rsvp_status: rest.rsvpStatus,
-      dietary_restrictions: rest.dietaryRestrictions || null,
-      plus_one: rest.plusOne,
-      notes: rest.notes || null,
+    const guest = await guestsApi.createGuest({
+      name: `${guestData.firstName} ${guestData.lastName}`.trim(),
+      email: guestData.email,
+      phone: guestData.phone,
+      rsvpStatus: guestData.rsvpStatus,
+      dietaryRestrictions: guestData.dietaryRestrictions,
+      tableAssignment: undefined,
     });
 
-    if (error) throw error;
-    return data[0];
+    if (!guest) throw new Error("Failed to create guest");
+    return guest;
   } catch (error) {
     console.error("Error creating guest:", error);
     throw error;
@@ -41,22 +41,18 @@ export async function createGuest(guestData: GuestFormData) {
 // Update an existing guest
 export async function updateGuest(id: string, guestData: GuestFormData) {
   try {
-    const { firstName, lastName, ...rest } = guestData;
-
-    const { data, error } = await guestsQuery.update(id, {
-      name: `${firstName} ${lastName}`.trim(),
-      email: rest.email,
-      phone: rest.phone || null,
-      category: rest.category,
-      rsvp_status: rest.rsvpStatus,
-      dietary_restrictions: rest.dietaryRestrictions || null,
-      plus_one: rest.plusOne,
-      notes: rest.notes || null,
-      updated_at: new Date(),
+    const guest = await guestsApi.updateGuest({
+      id,
+      name: `${guestData.firstName} ${guestData.lastName}`.trim(),
+      email: guestData.email,
+      phone: guestData.phone,
+      rsvpStatus: guestData.rsvpStatus,
+      dietaryRestrictions: guestData.dietaryRestrictions,
+      tableAssignment: undefined,
     });
 
-    if (error) throw error;
-    return data[0];
+    if (!guest) throw new Error("Failed to update guest");
+    return guest;
   } catch (error) {
     console.error("Error updating guest:", error);
     throw error;
@@ -66,10 +62,7 @@ export async function updateGuest(id: string, guestData: GuestFormData) {
 // Delete a guest
 export async function deleteGuest(id: string) {
   try {
-    const { error } = await guestsQuery.delete(id);
-
-    if (error) throw error;
-    return true;
+    return await guestsApi.deleteGuest(id);
   } catch (error) {
     console.error("Error deleting guest:", error);
     throw error;
@@ -79,10 +72,7 @@ export async function deleteGuest(id: string) {
 // Get all guests
 export async function getAllGuests() {
   try {
-    const { data, error } = await guestsQuery.getAll();
-
-    if (error) throw error;
-    return data as RealtimeGuest[];
+    return await guestsApi.getGuests();
   } catch (error) {
     console.error("Error fetching guests:", error);
     throw error;
@@ -92,28 +82,51 @@ export async function getAllGuests() {
 // Get a single guest by ID
 export async function getGuestById(id: string) {
   try {
-    const { data, error } = await guestsQuery.getById(id);
-
-    if (error) throw error;
-    return data as RealtimeGuest;
+    const guests = await guestsApi.getGuests();
+    return guests.find(g => g.id === id) || null;
   } catch (error) {
     console.error("Error fetching guest:", error);
     throw error;
   }
 }
 
-// Update RSVP status
-export async function updateRsvpStatus(id: string, status: string) {
+// Update RSVP status with additional tracking
+export async function updateRsvpStatus(id: string, status: "confirmed" | "declined" | "pending", responseDate: Date = new Date()) {
   try {
-    const { data, error } = await guestsQuery.update(id, {
-      rsvp_status: status,
-      updated_at: new Date(),
+    const guest = await getGuestById(id);
+    if (!guest) throw new Error("Guest not found");
+    
+    return await guestsApi.updateGuest({
+      ...guest,
+      rsvpStatus: status
     });
-
-    if (error) throw error;
-    return data[0];
   } catch (error) {
     console.error("Error updating RSVP status:", error);
+    throw error;
+  }
+}
+
+// Get guests who haven't responded by deadline
+export async function getPendingRsvps(deadline: Date) {
+  try {
+    const guests = await guestsApi.getGuests();
+    return guests.filter(guest => 
+      guest.rsvpStatus === "pending" && 
+      guest.rsvpResponseDate && 
+      new Date(guest.rsvpResponseDate) < deadline
+    );
+  } catch (error) {
+    console.error("Error fetching pending RSVPs:", error);
+    throw error;
+  }
+}
+
+// Send RSVP reminder emails
+export async function sendRsvpReminder(guestIds: string[]) {
+  try {
+    return await guestsApi.sendRsvpReminders(guestIds);
+  } catch (error) {
+    console.error("Error sending RSVP reminders:", error);
     throw error;
   }
 }

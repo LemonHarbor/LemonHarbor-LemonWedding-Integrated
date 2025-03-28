@@ -117,6 +117,8 @@ interface AuthContextType {
   logout: () => Promise<void>;
   isAuthenticated: boolean;
   setUser: (user: User | null) => void;
+  loginAsAdmin: (email: string) => Promise<void>;
+  loginAsGuest: (email: string) => Promise<void>;
 }
 
 // Create context with default values
@@ -431,6 +433,76 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const loginAsAdmin = async (email: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // Create admin user without authentication (for development only)
+      const adminUser: User = {
+        id: "admin-" + Math.random().toString(36).substring(2, 9),
+        email,
+        name: "Admin User",
+        role: "developer",
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=admin`,
+      };
+
+      setUser(adminUser);
+      setPermissions(rolePermissions.developer);
+
+      toast({
+        title: "Admin login successful",
+        description: "Welcome back, Admin!",
+      });
+    } catch (err) {
+      console.error("Admin login error:", err);
+      setError(err as Error);
+      toast({
+        variant: "destructive",
+        title: "Admin login failed",
+        description: (err as Error).message,
+      });
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loginAsGuest = async (email: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // Create guest user without authentication
+      const guestUser: User = {
+        id: "guest-" + Math.random().toString(36).substring(2, 9),
+        email,
+        name: "Guest User",
+        role: "guest",
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=guest`,
+      };
+
+      setUser(guestUser);
+      setPermissions(rolePermissions.guest);
+
+      toast({
+        title: "Guest login successful",
+        description: "Welcome to the wedding planner!",
+      });
+    } catch (err) {
+      console.error("Guest login error:", err);
+      setError(err as Error);
+      toast({
+        variant: "destructive",
+        title: "Guest login failed",
+        description: (err as Error).message,
+      });
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -444,6 +516,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logout,
         isAuthenticated: !!user,
         setUser,
+        loginAsAdmin,
+        loginAsGuest,
       }}
     >
       {children}

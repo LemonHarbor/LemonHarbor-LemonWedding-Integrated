@@ -16,6 +16,7 @@ import { SecuritySettings } from './components/dashboard/SecuritySettings';
 // Auth Components
 import LoginForm from './components/auth/LoginForm';
 import SignUpForm from './components/auth/SignUpForm';
+import { GuestAccessForm } from './components/auth/GuestAccessForm';
 
 // Guest Portal Components
 import GuestPortal from './components/guest-area/GuestPortal';
@@ -58,82 +59,85 @@ function App() {
   };
 
   return (
-    <div className={darkMode ? 'dark' : 'light'}>
-      <AuthProvider>
-        <LanguageProvider>
-          <Router>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<LoginPage />} />
-              
-              {/* Auth Routes */}
-              <Route path="/login" element={<LoginForm />} />
-              <Route path="/register" element={<SignUpForm />} />
-              
-              {/* Guest Portal Routes */}
-              <Route path="/guest/:accessCode" element={<GuestPortal />} />
-              <Route path="/invitation/:accessCode" element={<GuestInvitation />} />
-              <Route path="/rsvp/:accessCode" element={<GuestRSVP />} />
-              
-              {/* Protected Dashboard Routes */}
-              <Route 
-                path="/dashboard" 
-                element={
-                  <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
-                    <MainDashboard />
-                  </AppLayout>
-                } 
-              />
-              <Route 
-                path="/dashboard/guests" 
-                element={
-                  <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
-                    <GuestManagement />
-                  </AppLayout>
-                } 
-              />
-              <Route 
-                path="/dashboard/tables" 
-                element={
-                  <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
-                    <TablePlanner />
-                  </AppLayout>
-                } 
-              />
-              <Route 
-                path="/dashboard/budget" 
-                element={
-                  <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
-                    <BudgetTracker />
-                  </AppLayout>
-                } 
-              />
-              <Route 
-                path="/dashboard/tasks" 
-                element={
-                  <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
-                    <TaskBoard />
-                  </AppLayout>
-                } 
-              />
-              <Route 
-                path="/dashboard/settings" 
-                element={
-                  <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
-                    <SecuritySettings />
-                  </AppLayout>
-                } 
-              />
-              
-              {/* Admin Dashboard */}
-              <Route path="/admin/*" element={<AdminDashboard />} />
-              
-              {/* Fallback Route */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Router>
-        </LanguageProvider>
-      </AuthProvider>
+    <div className={`min-h-screen ${darkMode ? 'dark' : 'light'}`}>
+      <div className="absolute inset-0 bg-background text-foreground">
+        <AuthProvider>
+          <LanguageProvider>
+            <Router>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<LoginPage />} />
+                
+                {/* Auth Routes */}
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<SignUpForm />} />
+                <Route path="/guest-access" element={<GuestAccessForm />} />
+                
+                {/* Guest Portal Routes */}
+                <Route path="/guest/:accessCode" element={<GuestPortal />} />
+                <Route path="/invitation/:accessCode" element={<GuestInvitation />} />
+                <Route path="/rsvp/:accessCode" element={<GuestRSVP />} />
+                
+                {/* Protected Dashboard Routes */}
+                <Route 
+                  path="/dashboard" 
+                  element={
+                    <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+                      <MainDashboard />
+                    </AppLayout>
+                  } 
+                />
+                <Route 
+                  path="/dashboard/guests" 
+                  element={
+                    <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+                      <GuestManagement />
+                    </AppLayout>
+                  } 
+                />
+                <Route 
+                  path="/dashboard/tables" 
+                  element={
+                    <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+                      <TablePlanner />
+                    </AppLayout>
+                  } 
+                />
+                <Route 
+                  path="/dashboard/budget" 
+                  element={
+                    <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+                      <BudgetTracker />
+                    </AppLayout>
+                  } 
+                />
+                <Route 
+                  path="/dashboard/tasks" 
+                  element={
+                    <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+                      <TaskBoard />
+                    </AppLayout>
+                  } 
+                />
+                <Route 
+                  path="/dashboard/settings" 
+                  element={
+                    <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+                      <SecuritySettings />
+                    </AppLayout>
+                  } 
+                />
+                
+                {/* Admin Dashboard */}
+                <Route path="/admin/*" element={<AdminDashboard />} />
+                
+                {/* Fallback Route */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Router>
+          </LanguageProvider>
+        </AuthProvider>
+      </div>
     </div>
   );
 }

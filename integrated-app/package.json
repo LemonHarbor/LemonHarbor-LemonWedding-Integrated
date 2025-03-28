@@ -60,6 +60,7 @@
     "react-resizable-panels": "^2.0.19",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
+    "react-simple-i18n": "^2.0.0",
     "react-to-print": "^3.0.5",
     "recharts": "^2.15.1",
     "tailwind-merge": "^2.3.0",

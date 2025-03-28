@@ -1,6 +1,14 @@
 import { supabase } from "../../supabase/supabase";
 import { Database } from "@/types/supabase";
 
+// RSVP statistics type
+export interface RsvpStats {
+  attending: number;
+  declined: number;
+  pending: number;
+  total: number;
+}
+
 // Task types
 export interface Task {
   id: string;
@@ -30,8 +38,14 @@ export interface Guest {
   email: string;
   phone?: string;
   rsvpStatus: "confirmed" | "declined" | "pending";
+  rsvpResponseDate?: string;
+  rsvpDeadline?: string;
   dietaryRestrictions?: string;
   tableAssignment?: string;
+  plusOne?: boolean;
+  plusOneName?: string;
+  category?: string;
+  notes?: string;
   userId?: string;
 }
 
@@ -348,8 +362,14 @@ export const guestsApi = {
         email: guest.email || "",
         phone: guest.phone,
         rsvpStatus: guest.rsvp_status as "confirmed" | "declined" | "pending",
+        rsvpResponseDate: guest.rsvp_response_date,
+        rsvpDeadline: guest.rsvp_deadline,
         dietaryRestrictions: guest.dietary_restrictions,
         tableAssignment: guest.table_assignment,
+        plusOne: guest.plus_one,
+        plusOneName: guest.plus_one_name,
+        category: guest.category,
+        notes: guest.notes,
         userId: guest.user_id,
       }));
     } catch (error) {
@@ -393,8 +413,14 @@ export const guestsApi = {
         email: data.email || "",
         phone: data.phone,
         rsvpStatus: data.rsvp_status as "confirmed" | "declined" | "pending",
+        rsvpResponseDate: data.rsvp_response_date,
+        rsvpDeadline: data.rsvp_deadline,
         dietaryRestrictions: data.dietary_restrictions,
         tableAssignment: data.table_assignment,
+        plusOne: data.plus_one,
+        plusOneName: data.plus_one_name,
+        category: data.category,
+        notes: data.notes,
         userId: data.user_id,
       };
     } catch (error) {
@@ -420,8 +446,14 @@ export const guestsApi = {
           email: guest.email,
           phone: guest.phone,
           rsvp_status: guest.rsvpStatus,
+          rsvp_response_date: guest.rsvpResponseDate,
+          rsvp_deadline: guest.rsvpDeadline,
           dietary_restrictions: guest.dietaryRestrictions,
           table_assignment: guest.tableAssignment,
+          plus_one: guest.plusOne,
+          plus_one_name: guest.plusOneName,
+          category: guest.category,
+          notes: guest.notes,
           updated_at: new Date(),
         })
         .eq("id", guest.id)
@@ -440,8 +472,14 @@ export const guestsApi = {
         email: data.email || "",
         phone: data.phone,
         rsvpStatus: data.rsvp_status as "confirmed" | "declined" | "pending",
+        rsvpResponseDate: data.rsvp_response_date,
+        rsvpDeadline: data.rsvp_deadline,
         dietaryRestrictions: data.dietary_restrictions,
         tableAssignment: data.table_assignment,
+        plusOne: data.plus_one,
+        plusOneName: data.plus_one_name,
+        category: data.category,
+        notes: data.notes,
         userId: data.user_id,
       };
     } catch (error) {
@@ -493,8 +531,14 @@ export const guestsApi = {
         email: guest.email,
         phone: guest.phone,
         rsvp_status: guest.rsvpStatus,
+        rsvp_response_date: guest.rsvpResponseDate,
+        rsvp_deadline: guest.rsvpDeadline,
         dietary_restrictions: guest.dietaryRestrictions,
         table_assignment: guest.tableAssignment,
+        plus_one: guest.plusOne,
+        plus_one_name: guest.plusOneName,
+        category: guest.category,
+        notes: guest.notes,
         user_id: userId,
       }));
 
