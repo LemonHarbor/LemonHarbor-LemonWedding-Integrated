@@ -5,3 +5,7 @@
 [submodule "repositories/HochzeitsappReally"]
 	path = repositories/HochzeitsappReally
 	url = https://github.com/LemonHarbor/HochzeitsappReally.git
+
+[submodule "repositories/LemonWedding"]
+	path = repositories/LemonWedding
+	url = https://github.com/LemonHarbor/LemonWedding.git
